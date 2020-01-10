@@ -4,12 +4,15 @@ import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Touch from '../utils/touch';
 
+const date = new Date();
+const timestamp = date.getTime();
+
 const formatUrl = (url, baseUrl, uriSize, avatarAuthURLFragment) => (
-	`${ baseUrl }${ url }?format=png&width=${ uriSize }&height=${ uriSize }${ avatarAuthURLFragment }`
+	`${ baseUrl }${ url }?format=png&width=${ uriSize }&height=${ uriSize }${ avatarAuthURLFragment }&t=${ timestamp }`
 );
 
 const Avatar = React.memo(({
-	text, size, baseUrl, borderRadius, style, avatar, type, children, userId, token, onPress, theme
+	text, size, baseUrl, borderRadius, style, avatar, type, children, userId, token, onPress, theme, isAvatarUploadActive
 }) => {
 	const avatarStyle = {
 		width: size,
@@ -37,6 +40,10 @@ const Avatar = React.memo(({
 		uri = avatar.includes('http') ? avatar : formatUrl(avatar, baseUrl, uriSize, avatarAuthURLFragment);
 	} else {
 		uri = formatUrl(`/avatar/${ room }`, baseUrl, uriSize, avatarAuthURLFragment);
+	}
+
+	if (isAvatarUploadActive === true) {
+		uri = avatar;
 	}
 
 
@@ -78,7 +85,8 @@ Avatar.propTypes = {
 	userId: PropTypes.string,
 	token: PropTypes.string,
 	theme: PropTypes.string,
-	onPress: PropTypes.func
+	onPress: PropTypes.func,
+	isAvatarUploadActive: PropTypes.bool
 };
 
 Avatar.defaultProps = {

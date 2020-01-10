@@ -66,7 +66,8 @@ class ProfileView extends React.Component {
 		avatarUrl: null,
 		avatar: {},
 		avatarSuggestions: {},
-		customFields: {}
+		customFields: {},
+		isAvatarUploadActive: false
 	}
 
 	async componentDidMount() {
@@ -254,6 +255,9 @@ class ProfileView extends React.Component {
 		};
 		try {
 			const response = await ImagePicker.openPicker(options);
+			if (response.data !== null) {
+				this.setState({ isAvatarUploadActive: true });
+			}
 			this.setAvatar({ url: response.path, data: `data:image/jpeg;base64,${ response.data }`, service: 'upload' });
 		} catch (error) {
 			console.warn(error);
@@ -378,7 +382,7 @@ class ProfileView extends React.Component {
 
 	render() {
 		const {
-			name, username, email, newPassword, avatarUrl, customFields, avatar, saving, showPasswordAlert
+			name, username, email, newPassword, avatarUrl, customFields, avatar, saving, showPasswordAlert, isAvatarUploadActive
 		} = this.state;
 		const {
 			baseUrl, user, theme, Accounts_CustomFields
@@ -405,6 +409,7 @@ class ProfileView extends React.Component {
 								baseUrl={baseUrl}
 								userId={user.id}
 								token={user.token}
+								isAvatarUploadActive={isAvatarUploadActive}
 							/>
 						</View>
 						<RCTextInput
